@@ -10,5 +10,5 @@ setup(name='audacity-scripting',
       description='A program to call commands in Audacity from python.',
       long_description=long_description,
       url='https://github.com/adthomas811/audacity-python-scripting',
-      packages=setuptools.find_packages()
+      packages=find_packages()
 )
