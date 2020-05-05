@@ -1,0 +1,12 @@
+Coding:
+~ Build package - setup.py, lint, pep8, etc.
+~ MANIFEST.in
+~ Unit tests - pytest
+~ Sample scripts to console scripts - parameterize
+
+Documentation:
+~ Building scriptable Audacity
+~ Class/method documentation
+~ Installation with pip - link ???
+
+License

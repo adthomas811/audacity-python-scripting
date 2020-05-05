@@ -4,7 +4,7 @@
 
 # Audacity Scripting Reference: https://manual.audacityteam.org/man/scripting_reference.html
 
-from audacity_scripting.base import AudacityScriptingBase
+from audacity_scripting.core.base import AudacityScriptingBase
 
 
 class AudacityScriptingUtils(AudacityScriptingBase):
