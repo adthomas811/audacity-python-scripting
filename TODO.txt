@@ -3,6 +3,7 @@ Coding:
 ~ MANIFEST.in
 ~ Unit tests - pytest
 ~ Sample scripts to console scripts - parameterize
+~ Audacity pipe mock for testing ???
 
 Documentation:
 ~ Building scriptable Audacity
