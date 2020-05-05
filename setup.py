@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 with open("README.md", "r") as fh:
-   long_description = fh.read()
+    long_description = fh.read()
 
 setup(name='audacity-scripting',
       version="0.0.1",
