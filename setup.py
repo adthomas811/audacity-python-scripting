@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setup(name='audacity-scripting',
-      version="0.0.3",
+      version="0.0.4",
       author="Alex Thomas",
       author_email="adthomas811@gmail.com",
       description='A program to call commands in Audacity from python.',
@@ -13,10 +13,10 @@ setup(name='audacity-scripting',
       packages=find_packages(),
       entry_points={
         'console_scripts': ['mix-and-render-tracks='
-                            'audacity_scripting.scipts.'
+                            'audacity_scripting.scripts.'
                             'mix_and_render_tracks:main',
                             'process-single-track='
-                            'audacity_scripting.scipts.'
+                            'audacity_scripting.scripts.'
                             'process_single_track:main']
       }
       )
