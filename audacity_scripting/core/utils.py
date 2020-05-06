@@ -31,8 +31,9 @@ class AudacityScriptingUtils(AudacityScriptingBase):
 
         for track_num in range(len(tracks_info)):
             if tracks_info[track_num]['kind'] == 'wave':
-                if (track_name_filter_list is None or
-                    tracks_info[track_num]['name'] in track_name_filter_list):
+                if (track_name_filter_list is None
+                        or tracks_info[track_num]['name']
+                        in track_name_filter_list):
                     track_dict = {}
                     track_dict['name'] = tracks_info[track_num]['name']
                     track_dict['track_num'] = track_num
@@ -40,7 +41,7 @@ class AudacityScriptingUtils(AudacityScriptingBase):
                     boundary_timestamps = []
                     boundary_timestamps.append(tracks_info[track_num]['start'])
                     for label_info in labels_info[0][1]:
-                        boundary_timestamps.append((label_info[0]+
+                        boundary_timestamps.append((label_info[0] +
                                                     label_info[1])/2)
                     boundary_timestamps.append(tracks_info[track_num]['end'])
 

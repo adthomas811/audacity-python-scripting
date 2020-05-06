@@ -39,7 +39,7 @@ class AudacityScriptingBase(object):
             raise ToSrvPipeNotExist(" ..does not exist. Ensure Audacity "
                                     "is running with mod-script-pipe.")
 
-        print( "Read from \"" + fromname + "\"")
+        print("Read from \"" + fromname + "\"")
         if not os.path.exists(fromname):
             raise FromSrvPipeNotExist(" ..does not exist. Ensure Audacity "
                                       "is running with mod-script-pipe.")
