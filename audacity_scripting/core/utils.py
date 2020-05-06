@@ -80,7 +80,9 @@ class AudacityScriptingUtils(AudacityScriptingBase):
         self.run_command('SelectNone:')
         self.run_command('Close:')
 
-    def normalize_tracks_by_clip(self, track_name_list):
+    def normalize_tracks_by_clip(self, track_name_list, peak_level=float(-1),
+                                 apply_gain=True, rem_dc_offset=True,
+                                 stereo_ind=False):
         self.run_command('SelectNone:')
         audio_tracks_info = self.get_audio_tracks_info(track_name_list)
 
@@ -91,7 +93,12 @@ class AudacityScriptingUtils(AudacityScriptingBase):
                                  'Start={} End={}'.format(track_num,
                                                           clip['start'],
                                                           clip['end']))
-                self.run_command('Normalize:')
+                self.run_command('Normalize: PeakLevel={} ApplyGain={} '
+                                 'RemoveDcOffset={} '
+                                 'StereoIndependent={}'.format(peak_level,
+                                                               apply_gain,
+                                                               rem_dc_offset,
+                                                               stereo_ind))
 
         self.run_command('SelectNone:')
 
