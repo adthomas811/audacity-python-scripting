@@ -1,8 +1,9 @@
 
 from audacity_scripting.core.utils import AudacityScriptingUtils
 
+
 def main():
-    track_name = 'L - AT2050' # track_name = 'SM57'
+    track_name = 'L - AT2050'  # track_name = 'SM57'
     # track_name = 'extracted-signal-1'
 
     command_runner = AudacityScriptingUtils()

@@ -1,5 +1,7 @@
 
-# Original connection code source: https://github.com/audacity/audacity/blob/master/scripts/piped-work/pipe_test.py
+# Original connection code source:
+# https://github.com/audacity/audacity/blob/ \
+#                          master/scripts/piped-work/pipe_test.py
 
 import json
 import os
@@ -21,7 +23,7 @@ class CommandAssertFailure(Exception):
 class AudacityScriptingBase(object):
 
     def __init__(self):
-        if sys.platform  == 'win32':
+        if sys.platform == 'win32':
             print("Running on windows")
             toname = '\\\\.\\pipe\\ToSrvPipe'
             fromname = '\\\\.\\pipe\\FromSrvPipe'
@@ -32,19 +34,21 @@ class AudacityScriptingBase(object):
             fromname = '/tmp/audacity_script_pipe.from.' + str(os.getuid())
             self.EOL = '\n'
 
-        print("Write to \"" + toname +"\"")
-        if not os.path.exists( toname ) :
-            raise ToSrvPipeNotExist(" ..does not exist.  Ensure Audacity is running with mod-script-pipe.")
+        print("Write to \"" + toname + "\"")
+        if not os.path.exists(toname):
+            raise ToSrvPipeNotExist(" ..does not exist. Ensure Audacity "
+                                    "is running with mod-script-pipe.")
 
-        print( "Read from \"" + fromname +"\"")
-        if not os.path.exists( fromname ) :
-            raise FromSrvPipeNotExist(" ..does not exist.  Ensure Audacity is running with mod-script-pipe.")
+        print( "Read from \"" + fromname + "\"")
+        if not os.path.exists(fromname):
+            raise FromSrvPipeNotExist(" ..does not exist. Ensure Audacity "
+                                      "is running with mod-script-pipe.")
 
-        print( "-- Both pipes exist. Good." )
+        print("-- Both pipes exist. Good.")
 
-        self.tofile = open( toname, 'wt+' )
-        print("-- File to write to has been opened" )
-        self.fromfile = open( fromname, 'rt')
+        self.tofile = open(toname, 'wt+')
+        print("-- File to write to has been opened")
+        self.fromfile = open(fromname, 'rt')
         print("-- File to read from has now been opened too")
 
     def close(self):
@@ -67,7 +71,8 @@ class AudacityScriptingBase(object):
     def _assert_command_success(self, result_string):
         if result_string != 'BatchCommand finished: OK':
             self.close()
-            raise CommandAssertFailure('Command finished with the status: {}'.format(result_string))
+            raise CommandAssertFailure('Command finished with the '
+                                       'status: {}'.format(result_string))
 
     def run_command(self, command):
         print()

@@ -11,8 +11,11 @@ setup(name='audacity-scripting',
       long_description=long_description,
       url='https://github.com/adthomas811/audacity-python-scripting',
       packages=find_packages(),
-      entry_points = {
-         'console_scripts': ['mix-and-render-tracks=audacity_scripting.scipts.mix_and_render_tracks:main',
-                             'process-single-track=audacity_scripting.scipts.process_single_track:main']
+      entry_points={
+        'console_scripts': 
+            ['mix-and-render-tracks='
+             'audacity_scripting.scipts.mix_and_render_tracks:main',
+             'process-single-track='
+             'audacity_scripting.scipts.process_single_track:main']
       }
-)
+     )
