@@ -1,4 +1,4 @@
 [build-system]
 build-backend = "local_backend"
 backend-path = ["backend"]
-requires = [""]
+requires = ["wheel", "setuptools", "attrs>=17.1"]
