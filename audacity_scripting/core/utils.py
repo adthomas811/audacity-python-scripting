@@ -31,8 +31,8 @@ class AudacityScriptingUtils(AudacityScriptingBase):
 
         for track_num in range(len(tracks_info)):
             if tracks_info[track_num]['kind'] == 'wave':
-                if (track_name_filter_list is None
-                        or tracks_info[track_num]['name']
+                if (track_name_filter_list is None or
+                        tracks_info[track_num]['name']
                         in track_name_filter_list):
                     track_dict = {}
                     track_dict['name'] = tracks_info[track_num]['name']
