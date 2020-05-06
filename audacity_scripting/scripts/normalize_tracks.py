@@ -24,7 +24,7 @@ def parse_args():
                         type=bool, default=False,
                         help='Set the StereoIndependent attribute '
                              'for normalization.')
-    
+
     return parser.parse_args()
 
 
