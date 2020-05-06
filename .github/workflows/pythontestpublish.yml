@@ -27,12 +27,10 @@ jobs:
 
     - name: Build a binary wheel and a source tarball
       run: |
-        pwd
-        ls
         python -m pep517.build --source --binary --out-dir dist/ .
 
     - name: Publish distribution to Test PyPI
       uses: pypa/gh-action-pypi-publish@master
       with:
-        password: ${{ secrets.test_pypi_password }}
+        password: ${{ secrets.audacity_scripting_test_pypi_password }}
         repository_url: https://test.pypi.org/legacy/
