@@ -1,0 +1,3 @@
+[build-system]
+build-backend = "local_backend"
+backend-path = ["backend"]
