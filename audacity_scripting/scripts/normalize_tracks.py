@@ -5,7 +5,7 @@ from audacity_scripting.core.utils import AudacityScriptingUtils
 
 def parse_args():
     parser = ArgumentParser(description='Normalize tracks.')
-    parser.add_argument('tracks', dest='tracks', type=str, nargs='+',
+    parser.add_argument('tracks', type=str, nargs='+',
                         help='Tracks to be normalized.')
     parser.add_argument('-j', '--join_all_clips', dest='join_all_clips',
                         type=bool, default=True,
