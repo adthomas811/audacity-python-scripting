@@ -1,8 +1,9 @@
 Coding:
-~ Build package - setup.py, lint, pep8, etc.
-~ MANIFEST.in
 ~ Unit tests - pytest
+~ Logging
+~ Check if tracks passed in exist
 ~ Sample scripts to console scripts - parameterize
+~ Access AudacityScriptingUtils using the with statement
 ~ Audacity pipe mock for testing ???
 
 Documentation:

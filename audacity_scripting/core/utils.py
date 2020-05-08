@@ -6,6 +6,7 @@
 # https://manual.audacityteam.org/man/scripting_reference.html
 
 from audacity_scripting.core.base import AudacityScriptingBase
+from math import log10
 
 
 class AudacityScriptingUtils(AudacityScriptingBase):
@@ -35,8 +36,11 @@ class AudacityScriptingUtils(AudacityScriptingBase):
                         tracks_info[track_num]['name']
                         in track_name_filter_list):
                     track_dict = {}
-                    track_dict['name'] = tracks_info[track_num]['name']
                     track_dict['track_num'] = track_num
+                    track_dict['name'] = tracks_info[track_num]['name']
+
+                    voltage_ratio_gain = tracks_info[track_num]['gain']
+                    track_dict['gain'] = round(20 * log10(voltage_ratio_gain))
 
                     boundary_timestamps = []
                     boundary_timestamps.append(tracks_info[track_num]['start'])
@@ -81,8 +85,8 @@ class AudacityScriptingUtils(AudacityScriptingBase):
         self.run_command('Close:')
 
     def normalize_tracks_by_clip(self, track_name_list, peak_level=float(-1),
-                                 apply_gain=True, rem_dc_offset=True,
-                                 stereo_ind=False):
+                                apply_gain=True, rem_dc_offset=True,
+                                stereo_ind=False):
         self.run_command('SelectNone:')
         audio_tracks_info = self.get_audio_tracks_info(track_name_list)
 
@@ -102,7 +106,10 @@ class AudacityScriptingUtils(AudacityScriptingBase):
 
         self.run_command('SelectNone:')
 
-    def compress_tracks_by_clip(self, track_name_list):
+    def compress_tracks_by_clip(self, track_name_list, threshold=float(-12),
+                                noise_floor=float(-40), ratio=float(2),
+                                attack_time=float(0.2), release_time=float(1),
+                                normalize=True, use_peak=False):
         self.run_command('SelectNone:')
         audio_tracks_info = self.get_audio_tracks_info(track_name_list)
 
@@ -113,22 +120,32 @@ class AudacityScriptingUtils(AudacityScriptingBase):
                                  'Start={} End={}'.format(track_num,
                                                           clip['start'],
                                                           clip['end']))
-                self.run_command('Compressor: Ratio=4 UsePeak=True')
+                self.run_command('Compressor: Threshold={} NoiseFloor={} '
+                                 'Ratio={} AttackTime={} ReleaseTime={} '
+                                 'Normalize={} '
+                                 'UsePeak={}'.format(threshold, noise_floor,
+                                                     ratio, attack_time,
+                                                     release_time, normalize,
+                                                     use_peak))
 
         self.run_command('SelectNone:')
 
-    def set_track_gain(self, track_name_list, track_settings):
-        self.run_command('SelectNone:')
-        audio_tracks_info = self.get_audio_tracks_info(track_name_list)
+    def get_track_gain(self, track_name):
+        audio_tracks_info = self.get_audio_tracks_info([track_name])
+        # Check that the length of audio_tracks_info is 1
 
-        for audio_track_info in audio_tracks_info:
-            track_num = audio_track_info['track_num']
-            track_name = audio_track_info['name']
-            track_dict = track_settings[track_name]
-            self.run_command('SelectTracks: '
-                             'Mode=Set Track={}'.format(track_num))
-            self.run_command('SetTrackAudio: '
-                             'Gain={}'.format(track_dict['Gain']))
+        return audio_tracks_info[0]['gain']
+
+    def set_track_gain(self, track_name, gain):
+        self.run_command('SelectNone:')
+        audio_tracks_info = self.get_audio_tracks_info([track_name])
+        # Check that the length of audio_tracks_info is 1
+
+        track_num = audio_tracks_info[0]['track_num']
+
+        self.run_command('SelectTracks: '
+                         'Mode=Set Track={}'.format(track_num))
+        self.run_command('SetTrackAudio: Gain={}'.format(gain))
 
         self.run_command('SelectNone:')
 
