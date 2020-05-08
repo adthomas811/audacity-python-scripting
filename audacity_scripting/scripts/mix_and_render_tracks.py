@@ -21,7 +21,7 @@ def main():
 
     track_gains_list = []
     if args.track_gains is None:
-        track_gains_list = [[0,0]]
+        track_gains_list = [[0, 0]]
     else:
         track_gains_list = deepcopy(args.track_gains)
 

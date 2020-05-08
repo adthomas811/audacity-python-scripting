@@ -85,8 +85,8 @@ class AudacityScriptingUtils(AudacityScriptingBase):
         self.run_command('Close:')
 
     def normalize_tracks_by_clip(self, track_name_list, peak_level=float(-1),
-                                apply_gain=True, rem_dc_offset=True,
-                                stereo_ind=False):
+                                 apply_gain=True, rem_dc_offset=True,
+                                 stereo_ind=False):
         self.run_command('SelectNone:')
         audio_tracks_info = self.get_audio_tracks_info(track_name_list)
 
