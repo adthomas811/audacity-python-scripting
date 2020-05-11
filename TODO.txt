@@ -7,8 +7,5 @@ Coding:
 ~ Audacity pipe mock for testing ???
 
 Documentation:
-~ Basic description
-~ Building scriptable Audacity
 ~ Class/method documentation
-~ Installation with pip - link ???
 ~ License
