@@ -30,15 +30,12 @@ def parse_args():
 def main():
     args = parse_args()
 
-    command_runner = AudacityScriptingUtils()
-
-    command_runner.normalize_tracks_by_clip(args.tracks,
-                                            args.peak_level,
-                                            args.apply_gain,
-                                            args.rem_dc_offset,
-                                            args.stereo_ind)
-
-    command_runner.close()
+    with AudacityScriptingUtils() as command_runner:
+        command_runner.normalize_tracks_by_clip(args.tracks,
+                                                args.peak_level,
+                                                args.apply_gain,
+                                                args.rem_dc_offset,
+                                                args.stereo_ind)
 
 if __name__ == '__main__':
     main()

@@ -13,6 +13,12 @@ class AudacityScriptingUtils(AudacityScriptingBase):
     def __init__(self):
         super(AudacityScriptingUtils, self).__init__()
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self):
+        self.close()
+
     def get_tracks_info(self):
         result = self.run_command('GetInfo: Type=Tracks')
         return self.get_json(result)

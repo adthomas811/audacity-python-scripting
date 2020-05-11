@@ -25,32 +25,29 @@ def main():
     else:
         track_gains_list = deepcopy(args.track_gains)
 
-    command_runner = AudacityScriptingUtils()
+    with AudacityScriptingUtils() as command_runner:
+        track_starting_gain_dict = {}
+        for track_name in args.track_names:
+            track_starting_gain = command_runner.get_track_gain(track_name)
+            track_starting_gain_dict[track_name] = track_starting_gain
 
-    track_starting_gain_dict = {}
-    for track_name in args.track_names:
-        track_starting_gain = command_runner.get_track_gain(track_name)
-        track_starting_gain_dict[track_name] = track_starting_gain
+        for track_gains in track_gains_list:
+            new_track_name = ''
+            for track_num in range(len(args.track_names)):
+                track_name = args.track_names[track_num]
+                track_gain = track_gains[track_num]
+                command_runner.set_track_gain(track_name, track_gain)
+                new_track_name += '{}: {} '.format(track_name, track_gain)
 
-    for track_gains in track_gains_list:
-        new_track_name = ''
-        for track_num in range(len(args.track_names)):
-            track_name = args.track_names[track_num]
-            track_gain = track_gains[track_num]
-            command_runner.set_track_gain(track_name, track_gain)
-            new_track_name += '{}: {} '.format(track_name, track_gain)
+            command_runner.mix_and_render_to_new_track(args.track_names)
 
-        command_runner.mix_and_render_to_new_track(args.track_names)
+            new_track_num = len(command_runner.get_tracks_info()) - 1
+            command_runner.rename_track_by_num(new_track_name.rstrip(),
+                                               new_track_num)
 
-        new_track_num = len(command_runner.get_tracks_info()) - 1
-        command_runner.rename_track_by_num(new_track_name.rstrip(),
-                                           new_track_num)
-
-    for track_name in args.track_names:
-        command_runner.set_track_gain(track_name,
-                                      track_starting_gain_dict[track_name])
-
-    command_runner.close()
+        for track_name in args.track_names:
+            command_runner.set_track_gain(track_name,
+                                          track_starting_gain_dict[track_name])
 
 if __name__ == '__main__':
     main()
