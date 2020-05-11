@@ -1,14 +1,14 @@
 Coding:
 ~ Unit tests - pytest
 ~ Logging
-~ Check if tracks passed in exist
-~ Sample scripts to console scripts - parameterize
 ~ Access AudacityScriptingUtils using the with statement
+~ Check if tracks passed in exist
+~ Add checks and exceptions to be raised
 ~ Audacity pipe mock for testing ???
 
 Documentation:
+~ Basic description
 ~ Building scriptable Audacity
 ~ Class/method documentation
 ~ Installation with pip - link ???
-
-License
+~ License
