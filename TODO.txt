@@ -1,11 +1,16 @@
 Coding:
-~ Unit tests - pytest
-~ Logging
-~ Access AudacityScriptingUtils using the with statement
-~ Check if tracks passed in exist
-~ Add checks and exceptions to be raised
-~ Audacity pipe mock for testing ???
+~ Unit tests - pytest: https://www.geeksforgeeks.org/unit-testing-python-unittest/
+                       https://realpython.com/python-testing/
+                       https://docs.python-guide.org/writing/tests/
+~ Logging: https://realpython.com/python-logging/
+           https://www.geeksforgeeks.org/logging-in-python/
+~ With statement: https://www.geeksforgeeks.org/with-statement-in-python/
+~ Add checks (such as track existence) and exceptions to be raised
 
 Documentation:
-~ Class/method documentation
+~ Class/method documentation: https://realpython.com/documenting-python-code/
+                              https://docs.python-guide.org/writing/documentation/
 ~ License
+
+Advanced Testing:
+~ Audacity pipe mock
