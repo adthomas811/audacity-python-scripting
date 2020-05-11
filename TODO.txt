@@ -1,10 +1,9 @@
 Coding:
+~ Logging: https://realpython.com/python-logging/
+           https://www.geeksforgeeks.org/logging-in-python/
 ~ Unit tests - pytest: https://www.geeksforgeeks.org/unit-testing-python-unittest/
                        https://realpython.com/python-testing/
                        https://docs.python-guide.org/writing/tests/
-~ Logging: https://realpython.com/python-logging/
-           https://www.geeksforgeeks.org/logging-in-python/
-~ With statement: https://www.geeksforgeeks.org/with-statement-in-python/
 ~ Add checks (such as track existence) and exceptions to be raised
 
 Documentation:
@@ -14,4 +13,3 @@ Documentation:
 
 Advanced Testing:
 ~ Audacity pipe mock
-
