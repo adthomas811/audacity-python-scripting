@@ -6,7 +6,7 @@ from os.path import abspath, dirname, isdir, isfile, join
 from time import sleep
 
 package_path = dirname(abspath(__file__))
-log_dir_path = join(package_path, 'logs')
+log_dir_path = join(package_path, '_logs')
 LOGGER_NAME = __name__
 
 if not isdir(log_dir_path):
