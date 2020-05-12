@@ -3,9 +3,13 @@
 # https://github.com/audacity/audacity/blob/ \
 #                          master/scripts/piped-work/pipe_test.py
 
+from audacity_scripting import LOGGER_NAME
 import json
+import logging
 import os
 import sys
+
+logger = logging.getLogger(LOGGER_NAME)
 
 
 class ToSrvPipeNotExist(Exception):
@@ -24,32 +28,32 @@ class AudacityScriptingBase(object):
 
     def __init__(self):
         if sys.platform == 'win32':
-            print("Running on windows")
+            logger.info("Running on windows")
             toname = '\\\\.\\pipe\\ToSrvPipe'
             fromname = '\\\\.\\pipe\\FromSrvPipe'
             self.EOL = '\r\n\0'
         else:
-            print("Running on linux or mac")
+            logger.info("Running on linux or mac")
             toname = '/tmp/audacity_script_pipe.to.' + str(os.getuid())
             fromname = '/tmp/audacity_script_pipe.from.' + str(os.getuid())
             self.EOL = '\n'
 
-        print("Write to \"" + toname + "\"")
+        logger.info("Write to \"" + toname + "\"")
         if not os.path.exists(toname):
             raise ToSrvPipeNotExist(" ..does not exist. Ensure Audacity "
                                     "is running with mod-script-pipe.")
 
-        print("Read from \"" + fromname + "\"")
+        logger.info("Read from \"" + fromname + "\"")
         if not os.path.exists(fromname):
             raise FromSrvPipeNotExist(" ..does not exist. Ensure Audacity "
                                       "is running with mod-script-pipe.")
 
-        print("-- Both pipes exist. Good.")
+        logger.info("Both pipes exist. Good.")
 
         self.tofile = open(toname, 'wt+')
-        print("-- File to write to has been opened")
+        logger.info("File to write to has been opened")
         self.fromfile = open(fromname, 'rt')
-        print("-- File to read from has now been opened too")
+        logger.info("File to read from has now been opened too")
 
     def close(self):
         self.tofile.close()
@@ -75,10 +79,7 @@ class AudacityScriptingBase(object):
                                        'status: {}'.format(result_string))
 
     def run_command(self, command):
-        print()
-        print('Command:')
-        print('   {}'.format(command))
-        print()
+        logger.info('Command: {}'.format(command))
         self._send_command(command)
         return self._get_response()
 
