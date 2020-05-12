@@ -1,6 +1,8 @@
 
 from argparse import ArgumentParser
+from audacity_scripting import LOGGER_NAME
 from audacity_scripting.core.utils import AudacityScriptingUtils
+import logging
 
 
 def parse_args():
@@ -28,6 +30,9 @@ def parse_args():
 
 
 def main():
+    logger = logging.getLogger(LOGGER_NAME)
+    logger.info('Running Script: Normalize Tracks')
+
     args = parse_args()
 
     with AudacityScriptingUtils() as command_runner:

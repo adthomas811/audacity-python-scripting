@@ -1,7 +1,9 @@
 
 from argparse import ArgumentParser
+from audacity_scripting import LOGGER_NAME
 from audacity_scripting.core.utils import AudacityScriptingUtils
 from copy import deepcopy
+import logging
 
 
 def parse_args():
@@ -16,7 +18,11 @@ def parse_args():
 
 
 def main():
+    logger = logging.getLogger(LOGGER_NAME)
+    logger.info('Running Script: Mix and Render Tracks')
+
     # Update script to mix and render multiple tracks, not just two
+    # Check in args and default track_gains_list
     args = parse_args()
 
     track_gains_list = []
