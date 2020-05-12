@@ -6,7 +6,7 @@ import logging
 
 
 def parse_args():
-    parser = ArgumentParser(description='Normalize tracks.')
+    parser = ArgumentParser(description='Normalize tracks by label.')
     parser.add_argument('tracks', type=str, nargs='+',
                         help='Tracks to be normalized.')
     parser.add_argument('-p', '--peak_level', dest='peak_level',
@@ -36,11 +36,11 @@ def main():
     args = parse_args()
 
     with AudacityScriptingUtils() as command_runner:
-        command_runner.normalize_tracks_by_clip(args.tracks,
-                                                args.peak_level,
-                                                args.apply_gain,
-                                                args.rem_dc_offset,
-                                                args.stereo_ind)
+        command_runner.normalize_tracks_by_label(args.tracks,
+                                                 args.peak_level,
+                                                 args.apply_gain,
+                                                 args.rem_dc_offset,
+                                                 args.stereo_ind)
 
 if __name__ == '__main__':
     main()

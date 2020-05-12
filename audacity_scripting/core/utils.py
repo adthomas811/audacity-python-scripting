@@ -8,6 +8,11 @@
 from audacity_scripting.core.base import AudacityScriptingBase
 from math import log10
 
+# 1. Check if there are more than one label track in get_audio_tracks_info
+# 2. Check if there is no label track in get_audio_tracks_info
+# 3. Check that the length of audio_tracks_info is 1 in get_track_gain
+#    and set_track_gain (no duplicate track names)
+
 
 class AudacityScriptingUtils(AudacityScriptingBase):
     def __init__(self):
@@ -55,12 +60,12 @@ class AudacityScriptingUtils(AudacityScriptingBase):
                                                     label_info[1])/2)
                     boundary_timestamps.append(tracks_info[track_num]['end'])
 
-                    track_dict['clips'] = []
+                    track_dict['labels'] = []
                     for i in range(len(boundary_timestamps)-1):
-                        clip_dict = {}
-                        clip_dict['start'] = boundary_timestamps[i]
-                        clip_dict['end'] = boundary_timestamps[i+1]
-                        track_dict['clips'].append(clip_dict)
+                        label_dict = {}
+                        label_dict['start'] = boundary_timestamps[i]
+                        label_dict['end'] = boundary_timestamps[i+1]
+                        track_dict['labels'].append(label_dict)
                     tracks_list.append(track_dict)
         return tracks_list
 
@@ -90,19 +95,19 @@ class AudacityScriptingUtils(AudacityScriptingBase):
         self.run_command('SelectNone:')
         self.run_command('Close:')
 
-    def normalize_tracks_by_clip(self, track_name_list, peak_level=float(-1),
-                                 apply_gain=True, rem_dc_offset=True,
-                                 stereo_ind=False):
+    def normalize_tracks_by_label(self, track_name_list, peak_level=float(-1),
+                                  apply_gain=True, rem_dc_offset=True,
+                                  stereo_ind=False):
         self.run_command('SelectNone:')
         audio_tracks_info = self.get_audio_tracks_info(track_name_list)
 
         for audio_track_info in audio_tracks_info:
             track_num = audio_track_info['track_num']
-            for clip in audio_track_info['clips']:
+            for label in audio_track_info['labels']:
                 self.run_command('Select: Mode=Set Track={} '
                                  'Start={} End={}'.format(track_num,
-                                                          clip['start'],
-                                                          clip['end']))
+                                                          label['start'],
+                                                          label['end']))
                 self.run_command('Normalize: PeakLevel={} ApplyGain={} '
                                  'RemoveDcOffset={} '
                                  'StereoIndependent={}'.format(peak_level,
@@ -112,20 +117,21 @@ class AudacityScriptingUtils(AudacityScriptingBase):
 
         self.run_command('SelectNone:')
 
-    def compress_tracks_by_clip(self, track_name_list, threshold=float(-12),
-                                noise_floor=float(-40), ratio=float(2),
-                                attack_time=float(0.2), release_time=float(1),
-                                normalize=True, use_peak=False):
+    def compress_tracks_by_label(self, track_name_list, threshold=float(-12),
+                                 noise_floor=float(-40), ratio=float(2),
+                                 attack_time=float(0.2),
+                                 release_time=float(1), normalize=True,
+                                 use_peak=False):
         self.run_command('SelectNone:')
         audio_tracks_info = self.get_audio_tracks_info(track_name_list)
 
         for audio_track_info in audio_tracks_info:
             track_num = audio_track_info['track_num']
-            for clip in audio_track_info['clips']:
+            for label in audio_track_info['labels']:
                 self.run_command('Select: Mode=Set Track={} '
                                  'Start={} End={}'.format(track_num,
-                                                          clip['start'],
-                                                          clip['end']))
+                                                          label['start'],
+                                                          label['end']))
                 self.run_command('Compressor: Threshold={} NoiseFloor={} '
                                  'Ratio={} AttackTime={} ReleaseTime={} '
                                  'Normalize={} '
@@ -138,14 +144,12 @@ class AudacityScriptingUtils(AudacityScriptingBase):
 
     def get_track_gain(self, track_name):
         audio_tracks_info = self.get_audio_tracks_info([track_name])
-        # Check that the length of audio_tracks_info is 1
 
         return audio_tracks_info[0]['gain']
 
     def set_track_gain(self, track_name, gain):
         self.run_command('SelectNone:')
         audio_tracks_info = self.get_audio_tracks_info([track_name])
-        # Check that the length of audio_tracks_info is 1
 
         track_num = audio_tracks_info[0]['track_num']
 

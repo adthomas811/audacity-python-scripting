@@ -9,6 +9,8 @@ import logging
 import os
 import sys
 
+# 1. Log raised exceptions to log file
+
 logger = logging.getLogger(LOGGER_NAME)
 
 
@@ -74,7 +76,6 @@ class AudacityScriptingBase(object):
 
     def _assert_command_success(self, result_string):
         if result_string != 'BatchCommand finished: OK':
-            self.close()
             raise CommandAssertFailure('Command finished with the '
                                        'status: {}'.format(result_string))
 

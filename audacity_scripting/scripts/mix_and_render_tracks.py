@@ -6,7 +6,7 @@ from copy import deepcopy
 import logging
 
 # 1. Update script to mix and render multiple tracks -
-# add check for args and update default track_gains_list
+#    add check for args and update default track_gains_list
 # 2. Add arg for new track name(s)
 
 
@@ -15,7 +15,7 @@ def parse_args():
     parser.add_argument('track_names', metavar='track_name', type=str, nargs=2,
                         help='Tracks to be mixed and rendered.')
     parser.add_argument('-g', '--track_gains', dest='track_gains',
-                        type=int, nargs=2, action='append',
+                        type=float, nargs=2, action='append',
                         help='')
 
     return parser.parse_args()
