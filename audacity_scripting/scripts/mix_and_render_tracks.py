@@ -5,6 +5,10 @@ from audacity_scripting.core.utils import AudacityScriptingUtils
 from copy import deepcopy
 import logging
 
+# 1. Update script to mix and render multiple tracks -
+# add check for args and update default track_gains_list
+# 2. Add arg for new track name(s)
+
 
 def parse_args():
     parser = ArgumentParser(description='Mix and render two tracks.')
@@ -21,8 +25,6 @@ def main():
     logger = logging.getLogger(LOGGER_NAME)
     logger.info('Running Script: Mix and Render Tracks')
 
-    # Update script to mix and render multiple tracks, not just two
-    # Check in args and default track_gains_list
     args = parse_args()
 
     track_gains_list = []
