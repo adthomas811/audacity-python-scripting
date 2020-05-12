@@ -1,10 +1,9 @@
 Coding:
-~ Logging: https://realpython.com/python-logging/
-           https://www.geeksforgeeks.org/logging-in-python/
 ~ Unit tests - pytest: https://www.geeksforgeeks.org/unit-testing-python-unittest/
                        https://realpython.com/python-testing/
                        https://docs.python-guide.org/writing/tests/
 ~ Add checks (such as track existence) and exceptions to be raised
+~ Address comments in mix_and_render_tracks.py
 
 Documentation:
 ~ Class/method documentation: https://realpython.com/documenting-python-code/
