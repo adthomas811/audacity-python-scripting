@@ -23,17 +23,17 @@ if isfile(log_file):
 # Create the Logger
 logger = logging.getLogger(LOGGER_NAME)
 logger.setLevel(logging.DEBUG)
- 
+
 # Create the Handler for logging data to a file
 logger_handler = logging.FileHandler(log_file)
 logger_handler.setLevel(logging.DEBUG)
- 
+
 # Create a Formatter for formatting the log messages
 logger_formatter = logging.Formatter('%(asctime)s - %(levelname)-8s - '
                                      '%(message)s')
- 
+
 # Add the Formatter to the Handler
 logger_handler.setFormatter(logger_formatter)
- 
+
 # Add the Handler to the Logger
 logger.addHandler(logger_handler)
