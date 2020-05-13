@@ -3,7 +3,8 @@ Coding:
                        https://realpython.com/python-testing/
                        https://docs.python-guide.org/writing/tests/
 ~ Add checks (such as track existence) and exceptions to be raised
-~ Address comments in mix_and_render_tracks.py
+~ Address comments in scripts
+~ Make workflow into a sequence
 
 Documentation:
 ~ Class/method documentation: https://realpython.com/documenting-python-code/
