@@ -10,6 +10,7 @@ import os
 import sys
 
 # 1. Log raised exceptions to log file
+# 2. Raise not implemented exception for linux or mac
 
 logger = logging.getLogger(LOGGER_NAME)
 
@@ -31,8 +32,8 @@ class AudacityScriptingBase(object):
     def __init__(self):
         if sys.platform == 'win32':
             logger.info('Running on windows')
-            toname = '\\\\.\\pipe\\ToSrvPipe'
-            fromname = '\\\\.\\pipe\\FromSrvPipe'
+            toname = r'\\.\pipe\ToSrvPipe'
+            fromname = r'\\.\pipe\FromSrvPipe'
             self.EOL = '\r\n\0'
         else:
             logger.info('Running on linux or mac')
