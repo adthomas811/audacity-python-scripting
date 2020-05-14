@@ -53,7 +53,7 @@ class AudacityScriptingBase(object):
 
         logger.info('Both pipes exist. Good.')
 
-        self.tofile = open(toname, 'wt+')
+        self.tofile = open(toname, 'w')
         logger.info('File to write to has been opened')
         self.fromfile = open(fromname, 'rt')
         logger.info('File to read from has now been opened too')
