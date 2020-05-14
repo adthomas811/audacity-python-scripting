@@ -86,4 +86,10 @@ class AudacityScriptingBase(object):
         return self._get_response()
 
     def get_json(self, result):
-        return json.loads('\n'.join(result.split('\n')[:-2]))
+        raw_result_item_list = result.split('\n')[:-2]
+        result_item_list = []
+        for result_item in raw_result_item_list:
+            new_result_item = result_item.replace('\\', '\\\\')
+            new_result_item = new_result_item.replace('\\\\"', '\\"')
+            result_item_list.append(new_result_item)
+        return json.loads('\n'.join(result_item_list))

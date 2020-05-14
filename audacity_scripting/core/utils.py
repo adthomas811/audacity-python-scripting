@@ -24,16 +24,36 @@ class AudacityScriptingUtils(AudacityScriptingBase):
     def __exit__(self, exc_type, exc_value, exc_traceback):
         self.close()
 
+    def get_commands_info(self):
+        result = self.run_command('GetInfo: Type=Commands')
+        return self.get_json(result)
+
+    def get_menus_info(self):
+        result = self.run_command('GetInfo: Type=Menus')
+        return self.get_json(result)
+
+    def get_preferences_info(self):
+        result = self.run_command('GetInfo: Type=Preferences')
+        return self.get_json(result)
+
     def get_tracks_info(self):
         result = self.run_command('GetInfo: Type=Tracks')
+        return self.get_json(result)
+
+    def get_clips_info(self):
+        result = self.run_command('GetInfo: Type=Clips')
+        return self.get_json(result)
+
+    def get_envelopes_info(self):
+        result = self.run_command('GetInfo: Type=Envelopes')
         return self.get_json(result)
 
     def get_labels_info(self):
         result = self.run_command('GetInfo: Type=Labels')
         return self.get_json(result)
 
-    def get_clips_info(self):
-        result = self.run_command('GetInfo: Type=Clips')
+    def get_boxes_info(self):
+        result = self.run_command('GetInfo: Type=Boxes')
         return self.get_json(result)
 
     def get_audio_tracks_info(self, track_name_filter_list=None):
@@ -68,6 +88,27 @@ class AudacityScriptingUtils(AudacityScriptingBase):
                         track_dict['labels'].append(label_dict)
                     tracks_list.append(track_dict)
         return tracks_list
+
+    def get_scripting_id_list(self):
+        commands_info = self.get_commands_info()
+        menus_info = self.get_menus_info()
+        raw_scripting_id_list = []
+
+        for command_info in commands_info:
+            raw_scripting_id_list.append(command_info['id'])
+
+        for menu_info in menus_info:
+            if 'id' in menu_info.keys():
+                raw_scripting_id_list.append(menu_info['id'])
+
+        raw_scripting_id_list = list(set(raw_scripting_id_list))
+
+        scripting_id_list = []
+        for scripting_id in raw_scripting_id_list:
+            if '\\' not in scripting_id:
+                scripting_id_list.append(scripting_id)
+
+        return scripting_id_list
 
     def join_all_clips(self):
         self.run_command('SelectNone:')
