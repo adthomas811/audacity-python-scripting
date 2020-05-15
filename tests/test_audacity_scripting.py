@@ -22,6 +22,8 @@ class AudacityScriptingTests(unittest.TestCase):
 # https://github.com/audacity/audacity/blob/master/lib-src/mod-script-pipe/PipeServer.cpp
 # http://timgolden.me.uk/pywin32-docs/win32pipe.html
 
+import os
+import sys
 import win32pipe
 import win32file
 
@@ -43,14 +45,14 @@ class AudacityMock(object):
                      win32pipe.PIPE_WAIT |
                      PIPE_REJECT_REMOTE_CLIENTS)
         max_instances = win32pipe.PIPE_UNLIMITED_INSTANCES
-        buffer_size = 1024
+        self.buffer_size = 1024
 
         self.tofile = win32pipe.CreateNamedPipe(r'\\.\pipe\ToSrvPipe',
                                                 open_mode,
                                                 pipe_mode,
                                                 max_instances,
-                                                buffer_size,
-                                                buffer_size,
+                                                self.buffer_size,
+                                                self.buffer_size,
                                                 50,
                                                 None)
         if self.tofile == win32file.INVALID_HANDLE_VALUE:
@@ -61,8 +63,8 @@ class AudacityMock(object):
                                                   open_mode,
                                                   pipe_mode,
                                                   max_instances,
-                                                  buffer_size,
-                                                  buffer_size,
+                                                  self.buffer_size,
+                                                  self.buffer_size,
                                                   50,
                                                   None)
         if self.fromfile == win32file.INVALID_HANDLE_VALUE:
@@ -84,7 +86,7 @@ class AudacityMock(object):
             try:
                 while(True):
                     success, data = win32file.ReadFile(self.tofile,
-                                                       buffer_size,
+                                                       self.buffer_size,
                                                        None)
                     if success != 0:
                         # Raise Exception
@@ -92,7 +94,7 @@ class AudacityMock(object):
                         break
 
                     command = data.decode().split('\r')[0]
-                    response = evaluate_command(command)
+                    response = self.evaluate_command(command)
 
                     success = win32file.WriteFile(self.fromfile,
                                                   (response +
