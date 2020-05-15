@@ -298,4 +298,3 @@ scripting_id_list = [
     'PunchAndRoll', 'Silence', 'SelTrackStartToEnd', 'SoundActivationLevel',
     'Align_Together', 'ShowSelectionTB', 'ManageAnalyzers', 'ShowTransportTB',
     'ApplyMacrosPalette', 'SelCursorToTrackEnd', 'FitV']
-
