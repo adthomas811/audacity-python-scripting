@@ -50,7 +50,8 @@ class AudacityScriptingTests(unittest.TestCase):
 #                 # raise exception
 #                 print('self.tofile not valid')
 #
-#             self.fromfile = win32pipe.CreateNamedPipe(r'\\.\pipe\FromSrvPipe',
+#             self.fromfile = win32pipe.CreateNamedPipe(
+#                                                r'\\.\pipe\FromSrvPipe',
 #                                                       open_mode,
 #                                                       pipe_mode,
 #                                                       max_instances,
