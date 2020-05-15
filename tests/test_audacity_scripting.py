@@ -24,8 +24,11 @@ class AudacityScriptingTests(unittest.TestCase):
 
 import os
 import sys
-import win32pipe
-import win32file
+try:
+    import win32pipe
+    import win32file
+except ImportError:
+    pass
 
 
 class AudacityMock(object):
