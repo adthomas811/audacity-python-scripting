@@ -1,6 +1,13 @@
 
+import os
+import sys
 import unittest
 from unittest.mock import Mock
+try:
+    import win32pipe
+    import win32file
+except ImportError:
+    pass
 
 
 class AudacityScriptingTests(unittest.TestCase):
@@ -21,14 +28,6 @@ class AudacityScriptingTests(unittest.TestCase):
 # Create pipes for testing
 # https://github.com/audacity/audacity/blob/master/lib-src/mod-script-pipe/PipeServer.cpp
 # http://timgolden.me.uk/pywin32-docs/win32pipe.html
-
-import os
-import sys
-try:
-    import win32pipe
-    import win32file
-except ImportError:
-    pass
 
 
 class AudacityMock(object):
@@ -101,7 +100,7 @@ class AudacityMock(object):
 
                     success = win32file.WriteFile(self.fromfile,
                                                   (response +
-                                                  '\n').encode())[0]
+                                                   '\n').encode())[0]
                     if success != 0:
                         # Raise Exception
                         print('Write Failed!')
