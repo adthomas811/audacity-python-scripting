@@ -1,13 +1,52 @@
 
+from datetime import datetime
+import logging
 import os
+from os import mkdir
+from os.path import abspath, dirname, isdir, isfile, join
 import sys
+from time import sleep
 import unittest
 from unittest.mock import Mock
 try:
+    import pywintypes
     import win32pipe
     import win32file
 except ImportError:
     pass
+
+
+package_path = dirname(abspath(__file__))
+log_dir_path = join(package_path, '_logs')
+
+if not isdir(log_dir_path):
+    mkdir(log_dir_path)
+
+current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+log_file = join(log_dir_path, current_time + '.log')
+
+if isfile(log_file):
+    sleep(1)
+    current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    log_file = join(log_dir_path, current_time + '.log')
+
+# Create the Logger
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
+# Create the Handler for logging data to a file
+logger_handler = logging.FileHandler(log_file)
+logger_handler.setLevel(logging.DEBUG)
+
+# Create a Formatter for formatting the log messages
+logger_formatter = logging.Formatter('%(asctime)s - %(levelname)-8s - '
+                                     '%(message)s')
+
+# Add the Formatter to the Handler
+logger_handler.setFormatter(logger_formatter)
+
+# Add the Handler to the Logger
+logger.addHandler(logger_handler)
 
 
 class AudacityScriptingTests(unittest.TestCase):
@@ -49,7 +88,7 @@ class AudacityMock(object):
         max_instances = win32pipe.PIPE_UNLIMITED_INSTANCES
         self.buffer_size = 1024
 
-        self.tofile = win32pipe.CreateNamedPipe(r'\\.\pipe\ToSrvPipe',
+        self.tofile = win32pipe.CreateNamedPipe('\\\\.\\pipe\\ToSrvPipe',
                                                 open_mode,
                                                 pipe_mode,
                                                 max_instances,
@@ -59,9 +98,11 @@ class AudacityMock(object):
                                                 None)
         if self.tofile == win32file.INVALID_HANDLE_VALUE:
             # raise exception
-            print('self.tofile not valid')
+            logger.info('tofile not valid')
+        else:
+            logger.info('tofile is valid')
 
-        self.fromfile = win32pipe.CreateNamedPipe(r'\\.\pipe\FromSrvPipe',
+        self.fromfile = win32pipe.CreateNamedPipe('\\\\.\\pipe\\FromSrvPipe',
                                                   open_mode,
                                                   pipe_mode,
                                                   max_instances,
@@ -71,7 +112,9 @@ class AudacityMock(object):
                                                   None)
         if self.fromfile == win32file.INVALID_HANDLE_VALUE:
             # raise exception
-            print('self.fromfile not valid')
+            logger.info('fromfile not valid')
+        else:
+            logger.info('fromfile is valid')
 
     def run_pipe_server(self):
         if sys.platform == 'win32':
@@ -84,6 +127,10 @@ class AudacityMock(object):
         tofile_conn_res = win32pipe.ConnectNamedPipe(self.tofile, None)
         fromfile_conn_res = win32pipe.ConnectNamedPipe(self.fromfile, None)
 
+        logger.info('tofile connected: {}'.format(str(tofile_conn_res == 0)))
+        logger.info('fromfile connected: '
+                    '{}'.format(str(fromfile_conn_res == 0)))
+
         if tofile_conn_res == 0 and fromfile_conn_res == 0:
             try:
                 while(True):
@@ -92,8 +139,10 @@ class AudacityMock(object):
                                                        None)
                     if success != 0:
                         # Raise Exception
-                        print('Read Failed!')
+                        logger.info('Read Failed!')
                         break
+                    else:
+                        logger.info('Read succeeded!')
 
                     command = data.decode().split('\r')[0]
                     response = self.evaluate_command(command)
@@ -103,8 +152,12 @@ class AudacityMock(object):
                                                    '\n').encode())[0]
                     if success != 0:
                         # Raise Exception
-                        print('Write Failed!')
+                        logger.info('Write Failed!')
                         break
+                    else:
+                        logger.info('Write succeeded!')
+            except pywintypes.error as err:
+                logger.info(err)
             finally:
                 win32file.FlushFileBuffers(self.tofile)
                 win32pipe.DisconnectNamedPipe(self.tofile)
@@ -115,16 +168,22 @@ class AudacityMock(object):
                 win32file.CloseHandle(self.fromfile)
 
     def evaluate_command(self, command):
-        scripting_id_and_args_list = command.split(':')
+        command_list = command.split(':')
+        scripting_id = command_list[0]
+        logger.info('scripting_id: {}'.format(scripting_id))
 
-        if len(scripting_id_and_args_list) == 1:
-            pass
-        elif len(scripting_id_and_args_list) == 2:
-            pass
-        elif len(scripting_id_and_args_list) > 2:
-            pass
+        if len(command_list) == 1:
+            return 'No colon. Not yet implemented.\n'
+        elif len(command_list) == 2:
+            if scripting_id in scripting_id_list:
+                return 'BatchCommand finished: OK\n'
+            else:
+                return ('Your batch command of {} was not recognized.\n'
+                        'BatchCommand finished: Failed!\n'.format())
+        elif len(command_list) > 2:
+            return 'Multiple colons. Not yet implemented.\n'
         else:
-            pass
+            return 'Something went terribly wrong.\n'
 
 scripting_id_list = [
     'CursNextClipBoundary', 'SilenceFinder', 'Repeat', 'Align_StartToSelStart',

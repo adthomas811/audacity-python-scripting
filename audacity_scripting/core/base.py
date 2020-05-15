@@ -32,30 +32,33 @@ class AudacityScriptingBase(object):
     def __init__(self):
         if sys.platform == 'win32':
             logger.info('Running on windows')
-            toname = r'\\.\pipe\ToSrvPipe'
-            fromname = r'\\.\pipe\FromSrvPipe'
+            base_path = '\\\\.\\pipe\\'
+            toname = 'ToSrvPipe'
+            fromname = 'FromSrvPipe'
             self.EOL = '\r\n\0'
         else:
             logger.info('Running on linux or mac')
-            toname = '/tmp/audacity_script_pipe.to.' + str(os.getuid())
-            fromname = '/tmp/audacity_script_pipe.from.' + str(os.getuid())
+            base_path = '/tmp/'
+            toname = 'audacity_script_pipe.to.' + str(os.getuid())
+            fromname = 'audacity_script_pipe.from.' + str(os.getuid())
             self.EOL = '\n'
 
         logger.info('Write to "' + toname + '"')
-        if not os.path.exists(toname):
+        if toname not in os.listdir(base_path):
             raise ToSrvPipeNotExist(' ..does not exist. Ensure Audacity '
                                     'is running with mod-script-pipe.')
 
         logger.info('Read from "' + fromname + '"')
-        if not os.path.exists(fromname):
+        if fromname not in os.listdir(base_path):
             raise FromSrvPipeNotExist(' ..does not exist. Ensure Audacity '
                                       'is running with mod-script-pipe.')
 
         logger.info('Both pipes exist. Good.')
 
-        self.tofile = open(toname, 'w')
+        self.tofile = open(base_path + toname, 'w')
         logger.info('File to write to has been opened')
-        self.fromfile = open(fromname, 'rt')
+
+        self.fromfile = open(base_path + fromname, 'rt')
         logger.info('File to read from has now been opened too')
 
     def close(self):
