@@ -5,7 +5,6 @@ Coding:
 ~ Add checks (such as track existence) and exceptions to be raised
 ~ Address comments in scripts
 ~ Make workflow into a sequence
-~ Save list to file
 
 Documentation:
 ~ Class/method documentation: https://realpython.com/documenting-python-code/
