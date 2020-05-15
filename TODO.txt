@@ -5,11 +5,10 @@ Coding:
 ~ Add checks (such as track existence) and exceptions to be raised
 ~ Address comments in scripts
 ~ Make workflow into a sequence
+~ Mock - implement input checks - see Audacity source code
+       - multithreading to run mock from script
 
 Documentation:
 ~ Class/method documentation: https://realpython.com/documenting-python-code/
                               https://docs.python-guide.org/writing/documentation/
 ~ License
-
-Advanced Testing:
-~ Audacity pipe mock

@@ -4,6 +4,7 @@ import logging
 import os
 from os import mkdir
 from os.path import abspath, dirname, isdir, isfile, join
+import stat
 import sys
 from time import sleep
 import unittest
@@ -61,7 +62,8 @@ class AudacityScriptingTests(unittest.TestCase):
 # https://docs.python.org/3/library/unittest.mock.html
 # https://stackoverflow.com/questions/48542644/python-and-windows-named-pipes
 # https://www.programcreek.com/python/example/70014/win32pipe.CreateNamedPipe
-# https://codereview.stackexchange.com/questions/88672/python-wrapper-for-windows-pipes
+# https://codereview.stackexchange.com/questions/ \
+#                                      88672/python-wrapper-for-windows-pipes
 # https://www.python-course.eu/pipes.php
 
 # Create pipes for testing
@@ -74,9 +76,7 @@ class AudacityMock(object):
         if sys.platform == 'win32':
             self._init_mock_win()
         else:
-            # Linux and Mac not Implemented
-            toname = '/tmp/audacity_script_pipe.to.' + str(os.getuid())
-            fromname = '/tmp/audacity_script_pipe.from.' + str(os.getuid())
+            self._init_mock_unix()
 
     def _init_mock_win(self):
         PIPE_REJECT_REMOTE_CLIENTS = 0x00000008
@@ -116,12 +116,28 @@ class AudacityMock(object):
         else:
             logger.info('fromfile is valid')
 
+    def _init_mock_unix(self):
+        self.toname = '/tmp/audacity_script_pipe.to.' + str(os.getuid())
+        self.fromname = '/tmp/audacity_script_pipe.from.' + str(os.getuid())
+
+        try:
+            os.unlink(self.toname)
+            os.unlink(self.fromname)
+        except IOError as err:
+            logger.info(err)
+
+        try:
+            os.mkfifo(self.toname, stat.S_IRWXU)
+            os.mkfifo(self.fromname, stat.S_IRWXU)
+        except IOError as err:
+            logger.info(err)
+            raise
+
     def run_pipe_server(self):
         if sys.platform == 'win32':
             self._run_pipe_server_win()
         else:
-            # Linux and Mac not Implemented
-            pass
+            self._run_pipe_server_unix()
 
     def _run_pipe_server_win(self):
         tofile_conn_res = win32pipe.ConnectNamedPipe(self.tofile, None)
@@ -148,8 +164,7 @@ class AudacityMock(object):
                     response = self.evaluate_command(command)
 
                     success = win32file.WriteFile(self.fromfile,
-                                                  (response +
-                                                   '\n').encode())[0]
+                                                  response.encode())[0]
                     if success != 0:
                         # Raise Exception
                         logger.info('Write Failed!')
@@ -167,23 +182,52 @@ class AudacityMock(object):
                 win32pipe.DisconnectNamedPipe(self.fromfile)
                 win32file.CloseHandle(self.fromfile)
 
+    def _run_pipe_server_unix(self):
+        try:
+            tofile = open(self.toname, 'r')
+            fromfile = open(self.fromname, 'w')
+
+            while(True):
+                command = tofile.readline()
+                if len(command) == 0:
+                    break
+
+                response = self.evaluate_command(command)
+
+                fromfile.write(response)
+                fromfile.flush()
+        except IOError as err:
+            logger.info(err)
+            raise
+        except BrokenPipeError as err:
+            logger.info(err)
+        finally:
+            tofile.close()
+            fromfile.close()
+            os.unlink(self.toname)
+            os.unlink(self.fromname)
+
     def evaluate_command(self, command):
         command_list = command.split(':')
         scripting_id = command_list[0]
         logger.info('scripting_id: {}'.format(scripting_id))
 
+        response = ''
         if len(command_list) == 1:
-            return 'No colon. Not yet implemented.\n'
+            response = 'No colon. Not yet implemented.\n'
         elif len(command_list) == 2:
             if scripting_id in scripting_id_list:
-                return 'BatchCommand finished: OK\n'
+                response = 'BatchCommand finished: OK\n'
             else:
-                return ('Your batch command of {} was not recognized.\n'
-                        'BatchCommand finished: Failed!\n'.format())
+                response = ('Your batch command of {} was not recognized.\n'
+                            'BatchCommand finished: '
+                            'Failed!\n'.format(scripting_id))
         elif len(command_list) > 2:
-            return 'Multiple colons. Not yet implemented.\n'
+            response = 'Multiple colons. Not yet implemented.\n'
         else:
-            return 'Something went terribly wrong.\n'
+            response = 'Something went terribly wrong.\n'
+
+        return response + '\n'
 
 scripting_id_list = [
     'CursNextClipBoundary', 'SilenceFinder', 'Repeat', 'Align_StartToSelStart',
@@ -254,3 +298,4 @@ scripting_id_list = [
     'PunchAndRoll', 'Silence', 'SelTrackStartToEnd', 'SoundActivationLevel',
     'Align_Together', 'ShowSelectionTB', 'ManageAnalyzers', 'ShowTransportTB',
     'ApplyMacrosPalette', 'SelCursorToTrackEnd', 'FitV']
+
