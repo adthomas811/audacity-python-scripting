@@ -39,6 +39,7 @@ jobs:
     - name: Install test requirements
       run: |
         python -m pip install flake8 pytest pytest-pep8 parameterized
+        pip freeze
 
     - name: Lint with flake8
       run: |
