@@ -1,5 +1,4 @@
 Coding:
-~ Make workflow into a sequence
 ~ Unit tests - add more tests
 ~ Add checks (such as track existence) and exceptions to be raised
 ~ Address comments in scripts
