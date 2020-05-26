@@ -7,11 +7,19 @@ from os.path import abspath, dirname, isdir, isfile, join
 import re
 import stat
 import sys
-from threading import Thread
+import threading
 from time import sleep
 import unittest
+
+# Try importing modules for testing
 try:
     from audacity_scripting.core.utils import AudacityScriptingUtils
+    from parameterized import parameterized
+except ImportError:
+    pass
+
+# Try importing modules for Windows
+try:
     import pywintypes
     import win32pipe
     import win32file
@@ -60,11 +68,11 @@ BAD_COMMAND_RESPONSE = ('Your batch command of {} was not recognized.\n'
 @unittest.SkipTest
 class AudacityScriptingTests(unittest.TestCase):
     def setUp(self):
-        self.use_mock = False
+        logger.info('Test Setup')
+        self.use_mock = True
 
         if self.use_mock:
-            aud_mock = AudacityMock()
-            self.aud_mock_proc = Thread(target=aud_mock.run_pipe_server)
+            self.aud_mock_proc = AudacityMock()
             self.aud_mock_proc.start()
 
             if sys.platform == 'win32':
@@ -85,23 +93,69 @@ class AudacityScriptingTests(unittest.TestCase):
             logger.info('Both named pipes exist!')
 
     def tearDown(self):
+        logger.info('Test Teardown')
         if self.use_mock:
             self.aud_mock_proc.join()
 
     def test_command_runner(self):
+        logger.info('test_command_runner test run!')
         with AudacityScriptingUtils() as command_runner:
             response = command_runner.run_command('SelectAll:')
         self.assertEqual(response, SUCCESS_RESPONSE)
 
-    def test_command_runner_two(self):
+    @parameterized.expand([
+        [AudacityScriptingUtils.join_all_clips],
+        [AudacityScriptingUtils.split_all_audio_on_labels],
+        [AudacityScriptingUtils.export_multiple_prompt],
+        [AudacityScriptingUtils.close_project_prompt],
+    ])
+    def test_no_args_no_return_value_commands(self, command):
+        logger.info('command: {}'.format(command))
         with AudacityScriptingUtils() as command_runner:
-            response = command_runner.run_command('SelectNone:')
-        self.assertEqual(response, SUCCESS_RESPONSE)
+            res = command(command_runner)
+        self.assertIsNone(res)
 
-    def test_command_runner_three(self):
+    @parameterized.expand([
+        [AudacityScriptingUtils.get_commands_info, type([])],
+        [AudacityScriptingUtils.get_menus_info, type([])],
+        [AudacityScriptingUtils.get_preferences_info, type([])],
+        [AudacityScriptingUtils.get_tracks_info, type([])],
+        [AudacityScriptingUtils.get_clips_info, type([])],
+        [AudacityScriptingUtils.get_envelopes_info, type([])],
+        [AudacityScriptingUtils.get_labels_info, type([])],
+        [AudacityScriptingUtils.get_boxes_info, type([])],
+        [AudacityScriptingUtils.get_audio_tracks_info, type([])],
+        [AudacityScriptingUtils.get_scripting_id_list, type([])],
+    ])
+    def test_no_args_return_value_commands(self, command, target_type):
+        logger.info('command: {}'.format(command))
         with AudacityScriptingUtils() as command_runner:
-            response = command_runner.run_command('SELECTALL:')
-        self.assertEqual(response, SUCCESS_RESPONSE)
+            res = command(command_runner)
+        self.assertEqual(type(res), target_type)
+
+    @parameterized.expand([
+        [AudacityScriptingUtils.rename_track_by_num, ("New Track Name", 0)],
+        [AudacityScriptingUtils.rename_track_by_num, ("L - AT2050", 0)],
+        [AudacityScriptingUtils.normalize_tracks_by_label, (["L - AT2050"],)],
+        [AudacityScriptingUtils.compress_tracks_by_label, (["L - AT2050"],)],
+        [AudacityScriptingUtils.set_track_gain, ("L - AT2050", -1.5)],
+        [AudacityScriptingUtils.mix_and_render_to_new_track,
+            (["L - AT2050", "R - SM57"],)],
+    ])
+    def test_args_no_return_value_commands(self, command, args):
+        logger.info('command: {}'.format(command))
+        with AudacityScriptingUtils() as command_runner:
+            res = command(command_runner, *args)
+        self.assertIsNone(res)
+
+    @parameterized.expand([
+        [AudacityScriptingUtils.get_track_gain, ("L - AT2050",), type(1.0)],
+    ])
+    def test_args_return_value_commands(self, command, args, target_type):
+        logger.info('command: {}'.format(command))
+        with AudacityScriptingUtils() as command_runner:
+            res = command(command_runner, *args)
+        self.assertEqual(type(res), target_type)
 
 # Mock class:
 # This mock emulates the behavior of Audacity as of version 2.3.3
@@ -117,8 +171,10 @@ class AudacityScriptingTests(unittest.TestCase):
 # http://timgolden.me.uk/pywin32-docs/win32pipe.html
 
 
-class AudacityMock(object):
+class AudacityMock(threading.Thread):
     def __init__(self):
+        threading.Thread.__init__(self)
+
         if sys.platform == 'win32':
             self._init_mock_win()
         else:
@@ -180,7 +236,7 @@ class AudacityMock(object):
             logger.info(err)
             raise
 
-    def run_pipe_server(self):
+    def run(self):
         if sys.platform == 'win32':
             self._run_pipe_server_win()
         else:
@@ -190,15 +246,12 @@ class AudacityMock(object):
         logger.info('Running Windows Pipe Server!')
         tofile_conn_res = win32pipe.ConnectNamedPipe(self.tofile, None)
         fromfile_conn_res = win32pipe.ConnectNamedPipe(self.fromfile, None)
-        # win32pipe.ConnectNamedPipe(self.tofile, None)
-        # win32pipe.ConnectNamedPipe(self.fromfile, None)
 
         logger.info('tofile connected: {}'.format(str(tofile_conn_res == 0)))
         logger.info('fromfile connected: '
                     '{}'.format(str(fromfile_conn_res == 0)))
 
         try:
-            # if tofile_conn_res == 0 and fromfile_conn_res == 0:
             while(True):
                 success, data = win32file.ReadFile(self.tofile,
                                                    self.buffer_size,
@@ -224,39 +277,29 @@ class AudacityMock(object):
         except pywintypes.error as err:
             logger.info(err)
         finally:
-            win32file.FlushFileBuffers(self.tofile)
-            win32pipe.DisconnectNamedPipe(self.tofile)
-            win32file.CloseHandle(self.tofile)
-
-            win32file.FlushFileBuffers(self.fromfile)
-            win32pipe.DisconnectNamedPipe(self.fromfile)
-            win32file.CloseHandle(self.fromfile)
-            logger.info('Handles Closed')
+            self._kill_pipe_server_win()
 
     def _run_pipe_server_unix(self):
         try:
-            tofile = open(self.toname, 'r')
-            fromfile = open(self.fromname, 'w')
+            self.tofile = open(self.toname, 'r')
+            self.fromfile = open(self.fromname, 'w')
 
             while(True):
-                command = tofile.readline()
+                command = self.tofile.readline()
                 if len(command) == 0:
                     break
 
                 response = self._evaluate_command(command)
 
-                fromfile.write(response)
-                fromfile.flush()
+                self.fromfile.write(response)
+                self.fromfile.flush()
         except IOError as err:
             logger.info(err)
             raise
         except BrokenPipeError as err:
             logger.info(err)
         finally:
-            tofile.close()
-            fromfile.close()
-            os.unlink(self.toname)
-            os.unlink(self.fromname)
+            self._kill_pipe_server_unix()
 
     def _evaluate_command(self, command):
         command_list = command.split(':')
@@ -307,6 +350,9 @@ class AudacityMock(object):
             elif getinfo_type == 'Envelopes':
                 self.last_getinfo_str = getinfo_envelopes_str
                 return getinfo_envelopes_str
+            elif getinfo_type == 'Labels':
+                self.last_getinfo_str = getinfo_labels_str
+                return getinfo_labels_str
             elif getinfo_type == 'Boxes':
                 self.last_getinfo_str = getinfo_boxes_str
                 return getinfo_boxes_str
@@ -314,6 +360,32 @@ class AudacityMock(object):
                 return self.last_getinfo_str
         else:
             return getinfo_commands_str
+
+    def kill(self):
+        if sys.platform == 'win32':
+            self._kill_pipe_server_win()
+        else:
+            self._kill_pipe_server_unix()
+
+    def _kill_pipe_server_win(self):
+        # win32file.FlushFileBuffers(self.tofile)
+        # win32pipe.DisconnectNamedPipe(self.tofile)
+        win32file.CloseHandle(self.tofile)
+
+        # win32file.FlushFileBuffers(self.fromfile)
+        # win32pipe.DisconnectNamedPipe(self.fromfile)
+        win32file.CloseHandle(self.fromfile)
+
+        logger.info('Handles Closed')
+
+    def _kill_pipe_server_unix(self):
+        self.tofile.close()
+        os.unlink(self.toname)
+
+        self.fromfile.close()
+        os.unlink(self.fromname)
+
+        logger.info('Handles Closed')
 
 scripting_id_list = [
     'cursnextclipboundary', 'silencefinder', 'repeat', 'align_starttoselstart',

@@ -71,7 +71,8 @@ class AudacityScriptingUtils(AudacityScriptingBase):
                     track_dict['name'] = tracks_info[track_num]['name']
 
                     voltage_ratio_gain = tracks_info[track_num]['gain']
-                    track_dict['gain'] = round(20 * log10(voltage_ratio_gain))
+                    track_dict['gain'] = round(20 * log10(voltage_ratio_gain),
+                                               4)
 
                     boundary_timestamps = []
                     boundary_timestamps.append(tracks_info[track_num]['start'])
