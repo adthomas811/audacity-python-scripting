@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setup(name='audacity-scripting',
-      version="0.0.34",
+      version="0.0.35",
       author="Alex Thomas",
       author_email="adthomas811@gmail.com",
       description='A program to call commands in Audacity from python.',

@@ -1,22 +1,17 @@
 
+from audacity_scripting.core.utils import AudacityScriptingUtils
 from datetime import datetime
 import logging
 import os
 from os import mkdir
 from os.path import abspath, dirname, isdir, isfile, join
+from parameterized import parameterized
 import re
 import stat
 import sys
 import threading
 from time import sleep
 import unittest
-
-# Try importing modules for testing
-try:
-    from parameterized import parameterized
-    from audacity_scripting.core.utils import AudacityScriptingUtils
-except ImportError:
-    pass
 
 # Try importing modules for Windows
 try:
