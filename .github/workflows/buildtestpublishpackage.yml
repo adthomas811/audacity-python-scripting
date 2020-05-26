@@ -1,7 +1,7 @@
 # This workflows will upload a Python Package using Twine when a release is created
 # For more information see: https://help.github.com/en/actions/language-and-framework-guides/using-python-with-github-actions#publishing-to-package-registries
 
-name: Build Test and Upload Python Package
+name: Build Test and Publish Python Package
 
 on:
   push:
@@ -39,7 +39,6 @@ jobs:
     - name: Install test requirements
       run: |
         python -m pip install flake8 pytest pytest-pep8 parameterized
-        pip freeze
 
     - name: Lint with flake8
       run: |
