@@ -13,8 +13,8 @@ import unittest
 
 # Try importing modules for testing
 try:
-    from audacity_scripting.core.utils import AudacityScriptingUtils
     from parameterized import parameterized
+    from audacity_scripting.core.utils import AudacityScriptingUtils
 except ImportError:
     pass
 
