@@ -60,7 +60,6 @@ BAD_COMMAND_RESPONSE = ('Your batch command of {} was not recognized.\n'
                         'BatchCommand finished: Failed!\n')
 
 
-@unittest.SkipTest
 class AudacityScriptingTests(unittest.TestCase):
     def setUp(self):
         logger.info('Test Setup')
