@@ -3,7 +3,7 @@ from argparse import ArgumentParser
 from audacity_scripting import LOGGER_NAME
 from audacity_scripting.core.utils import AudacityScriptingUtils
 import logging
-
+    
 
 def main():
     logger = logging.getLogger(LOGGER_NAME)
