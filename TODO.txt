@@ -1,14 +1,11 @@
 Coding:
-~ Unit tests - pytest: https://www.geeksforgeeks.org/unit-testing-python-unittest/
-                       https://realpython.com/python-testing/
-                       https://docs.python-guide.org/writing/tests/
+~ Make workflow into a sequence
+~ Unit tests - add more tests
 ~ Add checks (such as track existence) and exceptions to be raised
 ~ Address comments in scripts
-~ Make workflow into a sequence
-~ Mock - implement input checks - see Audacity source code
-       - multithreading to run mock from script
 
 Documentation:
 ~ Class/method documentation: https://realpython.com/documenting-python-code/
                               https://docs.python-guide.org/writing/documentation/
+~ doctests?: https://pythontesting.net/framework/doctest/doctest-introduction/
 ~ License
