@@ -327,6 +327,7 @@ class AudacityMock(threading.Thread):
         # re - (?i)te(?-i)st should match test and TEst, but not teST or TEST
         if 'type' in getinfo_args.lower():
             getinfo_type = re.split('(?i)type=', getinfo_args)[-1]
+            getinfo_type = getinfo_type.split('\n')[0]
             if getinfo_type == 'Commands':
                 self.last_getinfo_str = getinfo_commands_str
                 return getinfo_commands_str
