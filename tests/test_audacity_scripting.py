@@ -21,16 +21,17 @@ try:
 except ImportError:
     pass
 
-
+# Get path and create log folder if it doesn't exist
 package_path = dirname(abspath(__file__))
 log_dir_path = join(package_path, '_logs')
-
 if not isdir(log_dir_path):
     mkdir(log_dir_path)
 
+# Use current time to name log file
 current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 log_file = join(log_dir_path, current_time + '.log')
 
+# If the log file already exists, wait a second and rename it
 if isfile(log_file):
     sleep(1)
     current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
@@ -54,6 +55,7 @@ logger_handler.setFormatter(logger_formatter)
 # Add the Handler to the Logger
 logger.addHandler(logger_handler)
 
+# Audacity command responses
 SUCCESS_RESPONSE = 'BatchCommand finished: OK\n'
 MISSING_CHAR_RESPONSE = 'Syntax error!\nCommand is missing \':\'\n'
 BAD_COMMAND_RESPONSE = ('Your batch command of {} was not recognized.\n'
