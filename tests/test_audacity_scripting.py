@@ -13,7 +13,7 @@ import threading
 from time import sleep
 import unittest
 
-# Try importing modules for Windows
+# Try to import modules for Windows
 try:
     import pywintypes
     import win32pipe
@@ -21,28 +21,26 @@ try:
 except ImportError:
     pass
 
-# Get path and create log folder if it doesn't exist
 package_path = dirname(abspath(__file__))
 log_dir_path = join(package_path, '_logs')
 if not isdir(log_dir_path):
     mkdir(log_dir_path)
 
-# Use current time to name log file
 current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-log_file = join(log_dir_path, current_time + '.log')
+log_file_path = join(log_dir_path, current_time + '.log')
 
 # If the log file already exists, wait a second and rename it
-if isfile(log_file):
+if isfile(log_file_path):
     sleep(1)
     current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    log_file = join(log_dir_path, current_time + '.log')
+    log_file_path = join(log_dir_path, current_time + '.log')
 
 # Create the Logger
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
 # Create the Handler for logging data to a file
-logger_handler = logging.FileHandler(log_file)
+logger_handler = logging.FileHandler(log_file_path)
 logger_handler.setLevel(logging.DEBUG)
 
 # Create a Formatter for formatting the log messages
