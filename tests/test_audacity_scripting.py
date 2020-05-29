@@ -80,6 +80,7 @@ class AudacityScriptingTests(unittest.TestCase):
                 toname = 'audacity_script_pipe.to.' + str(os.getuid())
                 fromname = 'audacity_script_pipe.from.' + str(os.getuid())
 
+            # TODO(adthomas811): Remove check for pipes.
             while toname not in os.listdir(base_path):
                 logger.info('{} not found!'.format(toname))
                 sleep(0.5)
@@ -93,6 +94,7 @@ class AudacityScriptingTests(unittest.TestCase):
         if self.use_mock:
             self.aud_mock_proc.join()
 
+    # TODO(adthomas811): Parameterize and add more tests.
     def test_command_runner(self):
         logger.info('test_command_runner test run!')
         with AudacityScriptingUtils() as command_runner:
@@ -111,6 +113,7 @@ class AudacityScriptingTests(unittest.TestCase):
             res = command(command_runner)
         self.assertIsNone(res)
 
+    # TODO(adthomas811): Improve check for returned objects.
     @parameterized.expand([
         [AudacityScriptingUtils.get_commands_info, type([])],
         [AudacityScriptingUtils.get_menus_info, type([])],
@@ -186,7 +189,7 @@ class AudacityMock(threading.Thread):
                                                 50,
                                                 None)
         if self.tofile == win32file.INVALID_HANDLE_VALUE:
-            # raise exception
+            # TODO(adthomas811): Raise Exception.
             logger.info('tofile not valid')
         else:
             logger.info('tofile is valid')
@@ -200,7 +203,7 @@ class AudacityMock(threading.Thread):
                                                   50,
                                                   None)
         if self.fromfile == win32file.INVALID_HANDLE_VALUE:
-            # raise exception
+            # TODO(adthomas811): Raise Exception.
             logger.info('fromfile not valid')
         else:
             logger.info('fromfile is valid')
@@ -220,6 +223,7 @@ class AudacityMock(threading.Thread):
             os.mkfifo(self.fromname, stat.S_IRWXU)
         except IOError as err:
             logger.info(err)
+            # TODO(adthomas811): Raise Exception.
             raise
 
     def run(self):
@@ -243,7 +247,7 @@ class AudacityMock(threading.Thread):
                                                    self.buffer_size,
                                                    None)
                 if success != 0:
-                    # Raise Exception
+                    # TODO(adthomas811): Raise Exception.
                     logger.info('Read Failed!')
                     break
                 else:
@@ -255,13 +259,14 @@ class AudacityMock(threading.Thread):
                 success = win32file.WriteFile(self.fromfile,
                                               response.encode())[0]
                 if success != 0:
-                    # Raise Exception
+                    # TODO(adthomas811): Raise Exception.
                     logger.info('Write Failed!')
                     break
                 else:
                     logger.info('Write succeeded!')
         except pywintypes.error as err:
             logger.info(err)
+            # TODO(adthomas811): Raise Exception.
         finally:
             self._kill_pipe_server_win()
 
@@ -281,6 +286,7 @@ class AudacityMock(threading.Thread):
                 self.fromfile.flush()
         except IOError as err:
             logger.info(err)
+            # TODO(adthomas811): Raise Exception.
             raise
         except BrokenPipeError as err:
             logger.info(err)
