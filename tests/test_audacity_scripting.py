@@ -155,16 +155,6 @@ class AudacityScriptingTests(unittest.TestCase):
 
 # Mock class:
 # This mock emulates the behavior of Audacity as of version 2.3.3
-# https://docs.python.org/3/library/unittest.mock.html
-# https://stackoverflow.com/questions/48542644/python-and-windows-named-pipes
-# https://www.programcreek.com/python/example/70014/win32pipe.CreateNamedPipe
-# https://codereview.stackexchange.com/questions/ \
-#                                      88672/python-wrapper-for-windows-pipes
-# https://www.python-course.eu/pipes.php
-
-# Create pipes for testing
-# https://github.com/audacity/audacity/blob/master/lib-src/mod-script-pipe/PipeServer.cpp
-# http://timgolden.me.uk/pywin32-docs/win32pipe.html
 
 
 class AudacityMock(threading.Thread):
