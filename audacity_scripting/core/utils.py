@@ -12,6 +12,8 @@ from math import log10
 # 2. Check if there is no label track in get_audio_tracks_info
 # 3. Check that the length of audio_tracks_info is 1 in get_track_gain
 #    and set_track_gain (no duplicate track names)
+# 4. Raise exception if any return type besides json is requested in the
+#    GetInfo command.
 
 
 class AudacityScriptingUtils(AudacityScriptingBase):

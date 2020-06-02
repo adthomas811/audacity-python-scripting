@@ -137,6 +137,11 @@ class AudacityScriptingTests(unittest.TestCase):
         """
         Tests to exercise the methods in AudacityScriptingUtils that pass no
         args and return no value.
+
+        Parameters
+        ----------
+        command : <class method object>
+            Command to be called and exercised.
         """
 
         logger.info('command: {}'.format(command))
@@ -161,6 +166,13 @@ class AudacityScriptingTests(unittest.TestCase):
         """
         Tests to exercise the methods in AudacityScriptingUtils that pass no
         args, but return a value.
+
+        Parameters
+        ----------
+        command : <class method object>
+            Command to be called and exercised.
+        target_type : type
+            Type of the expected return value.
         """
 
         logger.info('command: {}'.format(command))
@@ -181,6 +193,13 @@ class AudacityScriptingTests(unittest.TestCase):
         """
         Tests to exercise the methods in AudacityScriptingUtils that pass args,
         but return no value.
+
+        Parameters
+        ----------
+        command : <class method object>
+            Command to be called and exercised.
+        args : tuple
+            Tuple containing the args for the command.
         """
 
         logger.info('command: {}'.format(command))
@@ -195,6 +214,15 @@ class AudacityScriptingTests(unittest.TestCase):
         """
         Tests to exercise the methods in AudacityScriptingUtils that pass args
         and return a value.
+
+        Parameters
+        ----------
+        command : <class method object>
+            Command to be called and exercised.
+        args : tuple
+            Tuple containing the args for the command.
+        target_type : type
+            Type of the expected return value.
         """
 
         logger.info('command: {}'.format(command))
@@ -273,7 +301,8 @@ class AudacityMock(threading.Thread):
                                                 50,
                                                 None)
         if self.tofile == win32file.INVALID_HANDLE_VALUE:
-            # TODO(adthomas811): Raise Exception.
+            # TODO(adthomas811): Log the error (using logger.error)
+            # and raise an Exception.
             logger.info('tofile not valid')
         else:
             logger.info('tofile is valid')
@@ -287,7 +316,8 @@ class AudacityMock(threading.Thread):
                                                   50,
                                                   None)
         if self.fromfile == win32file.INVALID_HANDLE_VALUE:
-            # TODO(adthomas811): Raise Exception.
+            # TODO(adthomas811): Log the error (using logger.error)
+            # and raise an Exception.
             logger.info('fromfile not valid')
         else:
             logger.info('fromfile is valid')
@@ -295,6 +325,11 @@ class AudacityMock(threading.Thread):
     def _init_mock_unix(self):
         """
         Initialize named pipes on Unix.
+
+        Raises
+        ------
+        IOError
+            If the fifos are not created.
         """
 
         self.toname = '/tmp/audacity_script_pipe.to.' + str(os.getuid())
@@ -311,7 +346,8 @@ class AudacityMock(threading.Thread):
             os.mkfifo(self.fromname, stat.S_IRWXU)
         except IOError as err:
             logger.info(err)
-            # TODO(adthomas811): Raise Exception.
+            # TODO(adthomas811): Log the error (using logger.error)
+            # and raise an Exception.
             raise
 
     def run(self):
@@ -343,7 +379,8 @@ class AudacityMock(threading.Thread):
                                                    self.buffer_size,
                                                    None)
                 if success != 0:
-                    # TODO(adthomas811): Raise Exception.
+                    # TODO(adthomas811): Log the error (using logger.error)
+                    # and raise an Exception.
                     logger.info('Read Failed!')
                     break
                 else:
@@ -355,20 +392,27 @@ class AudacityMock(threading.Thread):
                 success = win32file.WriteFile(self.fromfile,
                                               response.encode())[0]
                 if success != 0:
-                    # TODO(adthomas811): Raise Exception.
+                    # TODO(adthomas811): Log the error (using logger.error)
+                    # and raise an Exception.
                     logger.info('Write Failed!')
                     break
                 else:
                     logger.info('Write succeeded!')
         except pywintypes.error as err:
             logger.info(err)
-            # TODO(adthomas811): Raise Exception.
+            # TODO(adthomas811): Log the error (using logger.error)
+            # and raise an Exception.
         finally:
             self.kill()
 
     def _run_pipe_server_unix(self):
         """
         Runs the named pipe server on Unix.
+
+        Raises
+        ------
+        IOError
+            If reading from or writing to the named pipes fails.
         """
 
         try:
@@ -386,7 +430,8 @@ class AudacityMock(threading.Thread):
                 self.fromfile.flush()
         except IOError as err:
             logger.info(err)
-            # TODO(adthomas811): Raise Exception.
+            # TODO(adthomas811): Log the error (using logger.error)
+            # and raise an Exception.
             raise
         except BrokenPipeError as err:
             logger.info(err)
@@ -397,6 +442,11 @@ class AudacityMock(threading.Thread):
         """
         Evaluates the command from AudacityScriptingBase, and returns the
         appropriate response.
+
+        Parameters
+        ----------
+        command : str
+            The command read by the mock to be evaluated.
         """
 
         command_list = command.split(':')
@@ -424,6 +474,11 @@ class AudacityMock(threading.Thread):
     def _getinfo_command(self, getinfo_args):
         """
         Determines which info gets returned for the GetInfo command.
+
+        Parameters
+        ----------
+        getinfo_args : str
+            The args for the GetInfo command.
         """
 
         if 'type' in getinfo_args.lower():
