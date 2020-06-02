@@ -258,9 +258,9 @@ class AudacityMock(threading.Thread):
     Methods
     -------
     run()
-        Runs the pipe server.
+        Runs the named pipe server.
     kill()
-        Kills the pipe server.
+        Kills the named pipe server.
     """
 
     def __init__(self):
@@ -302,7 +302,7 @@ class AudacityMock(threading.Thread):
                                                 None)
         if self.tofile == win32file.INVALID_HANDLE_VALUE:
             # TODO(adthomas811): Log the error (using logger.error)
-            # and raise an Exception.
+            #                    and raise an Exception.
             logger.info('tofile not valid')
         else:
             logger.info('tofile is valid')
@@ -317,7 +317,7 @@ class AudacityMock(threading.Thread):
                                                   None)
         if self.fromfile == win32file.INVALID_HANDLE_VALUE:
             # TODO(adthomas811): Log the error (using logger.error)
-            # and raise an Exception.
+            #                    and raise an Exception.
             logger.info('fromfile not valid')
         else:
             logger.info('fromfile is valid')
@@ -347,7 +347,7 @@ class AudacityMock(threading.Thread):
         except IOError as err:
             logger.info(err)
             # TODO(adthomas811): Log the error (using logger.error)
-            # and raise an Exception.
+            #                    and raise an Exception.
             raise
 
     def run(self):
@@ -380,7 +380,7 @@ class AudacityMock(threading.Thread):
                                                    None)
                 if success != 0:
                     # TODO(adthomas811): Log the error (using logger.error)
-                    # and raise an Exception.
+                    #                    and raise an Exception.
                     logger.info('Read Failed!')
                     break
                 else:
@@ -393,7 +393,7 @@ class AudacityMock(threading.Thread):
                                               response.encode())[0]
                 if success != 0:
                     # TODO(adthomas811): Log the error (using logger.error)
-                    # and raise an Exception.
+                    #                    and raise an Exception.
                     logger.info('Write Failed!')
                     break
                 else:
@@ -401,7 +401,7 @@ class AudacityMock(threading.Thread):
         except pywintypes.error as err:
             logger.info(err)
             # TODO(adthomas811): Log the error (using logger.error)
-            # and raise an Exception.
+            #                    and raise an Exception.
         finally:
             self.kill()
 
@@ -431,7 +431,7 @@ class AudacityMock(threading.Thread):
         except IOError as err:
             logger.info(err)
             # TODO(adthomas811): Log the error (using logger.error)
-            # and raise an Exception.
+            #                    and raise an Exception.
             raise
         except BrokenPipeError as err:
             logger.info(err)

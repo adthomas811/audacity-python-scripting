@@ -136,6 +136,8 @@ class AudacityScriptingBase(object):
         while line != '\n':
             result += line
             line = self.fromfile.readline()
+        # TODO(adthomas811): Would it be better to assert command success in
+        #                    utils?
         self._assert_command_success(result.split('\n')[-2])
         return result
 
@@ -157,13 +159,14 @@ class AudacityScriptingBase(object):
 
         if result_string != 'BatchCommand finished: OK':
             # TODO(adthomas811): Make sure the full error message is printed,
-            # not just the last line.
+            #                    not just the last line.
             raise CommandAssertFailure('Command finished with the '
                                        'status: {}'.format(result_string))
 
     def run_command(self, command):
         """
-        Sends a command and resturns the response.
+        Writes a command to the Audacity scripting pipe, reads and checks the
+        output, then returns the result.
 
         Parameters
         ----------

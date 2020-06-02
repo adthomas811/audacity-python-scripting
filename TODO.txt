@@ -1,11 +1,2 @@
-Coding:
-~ Unit tests - add more tests
-~ Add checks (such as track existence) and exceptions to be raised
-~ Address comments in scripts
-~ Log test results to display and store history
 
-Documentation:
-~ Class/method documentation: https://realpython.com/documenting-python-code/
-                              https://docs.python-guide.org/writing/documentation/
-~ doctests?: https://pythontesting.net/framework/doctest/doctest-introduction/
-~ License
+~ Log test results to show history.

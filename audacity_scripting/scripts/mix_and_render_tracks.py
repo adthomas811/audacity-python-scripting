@@ -5,9 +5,9 @@ from audacity_scripting.core.utils import AudacityScriptingUtils
 from copy import deepcopy
 import logging
 
-# 1. Update script to mix and render multiple tracks -
-#    add check for args and update default track_gains_list
-# 2. Add arg for new track name(s)
+# TODO(adthomas811): Update script to mix and render multiple tracks -
+#                    add check for args and update default track_gains_list
+# TODO(adthomas811): Add arg for new track name(s)
 
 
 def parse_args():
