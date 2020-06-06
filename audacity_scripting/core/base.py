@@ -133,6 +133,10 @@ class AudacityScriptingBase(object):
 
         result = ''
         line = ''
+        line = self.fromfile.readline()
+        # Remove leading newline character on Mac OSX
+        if line == '\n':
+            line = ''
         while line != '\n':
             result += line
             line = self.fromfile.readline()
