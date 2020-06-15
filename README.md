@@ -2,7 +2,7 @@
 
 ## Description
 
-This Python package is designed to automate tasks in Audacity. It does not include an exhaustive implementation of all of the possible commands (listed in 'Scriptable Audacity' below), but instead includes console scripts for common commands I use and wished to automate (listed in 'Installation and Use' below). That being said, it would be straightforward to add more commands to the package and console scripts to expose them. At this time, the scripts have only been tested on Windows, and the module is only available for Python 3.x.
+This Python package is designed to automate tasks in Audacity. It does not include an exhaustive implementation of all of the possible commands (listed in 'Scriptable Audacity' below), but instead includes console scripts for common commands I use and wished to automate (listed in 'Installation and Use' below). That being said, it would be straightforward to add more commands to the package and console scripts to expose them. This package is only available for Python 3.
 
 ## Scriptable Audacity
 
